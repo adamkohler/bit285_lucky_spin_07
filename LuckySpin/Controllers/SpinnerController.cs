@@ -55,10 +55,10 @@ namespace LuckySpin.Controllers
                 Luck = player.Luck
             };
             */
-
+            long tempIt = player.Id;
             //TODO: pass the player.Id to the SpinIt action
             //      (remember, you have to pass it as an object property so use the 'new { }' syntax)
-            return RedirectToAction("SpinIt", new { player.Id });
+            return RedirectToAction("SpinIt", new { id=player.Id });
         }
 
         /***
@@ -69,7 +69,7 @@ namespace LuckySpin.Controllers
         {
             //TODO: Use the _dbc and the given id to get the current player object 
             //       from Players, and Include her Spins (use Lamda expressions)
-            var currentPlayer = _dbc.Players.Include(p => p.Spins).Single( p => p.Id == id)
+            var currentPlayer = _dbc.Players.Include(p => p.Spins).Single(p => p.Id == id);
             ; //The above is incomplete
             
             //TODO: Add the properties to this SpinItViewModel object with data from the currentPlayer
@@ -97,7 +97,9 @@ namespace LuckySpin.Controllers
 
             //TODO Compare DB records when adding a generic Spin, as shown below, 
             //     with adding a new Spin to the current player's Spins list
-            _dbc.Spins.Add(new Spin { IsWinning = spinVM.IsWinning });
+            //_dbc.Spins.Add(new Spin { IsWinning = spinVM.IsWinning });
+            var spin = new Spin();
+            currentPlayer.Spins.Add(spin);
             _dbc.SaveChanges();
 
             return View("SpinIt", spinVM);
